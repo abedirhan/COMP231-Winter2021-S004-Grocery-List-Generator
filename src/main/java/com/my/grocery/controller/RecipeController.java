@@ -1,4 +1,4 @@
-package com.my.grocery.controler;
+package com.my.grocery.controller;
 
 public class RecipeController {
 }

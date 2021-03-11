@@ -16,13 +16,13 @@ import java.util.Arrays;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    private final String APIs = "com.my.grocery.controller";
+    //private final String APIs = "com.my.grocery.controller";
 
     @Bean
     public Docket swaggerApi() {
-        return new Docket(DocumentationType.SWAGGER_2).groupName("APIs")
+        return new Docket(DocumentationType.SWAGGER_2).groupName("Party")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(APIs))
+                .apis(RequestHandlerSelectors.basePackage("com.my.grocery.controller"))
                 .paths(PathSelectors.any()).build()
                 .apiInfo(apiInfo());
     }
