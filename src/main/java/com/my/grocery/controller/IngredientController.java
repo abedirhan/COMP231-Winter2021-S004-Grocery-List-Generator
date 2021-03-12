@@ -1,4 +1,51 @@
 package com.my.grocery.controller;
 
+import com.my.grocery.controller.base.dto.Response;
+import com.my.grocery.dto.ingredient.IngredientRequestDto;
+import com.my.grocery.dto.ingredient.IngredientResponseDto;
+import com.my.grocery.service.IngredientService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/ingredient")
 public class IngredientController {
+    @Autowired
+    private IngredientService ingredientService;
+//    @PostMapping()
+//    @ApiOperation(value = "Get All Members")
+//    public @ResponseBody
+//    ResponseEntity<Response<List<Party>>> getAllMembers() {
+//
+//        try {
+//            return ResponseEntity.ok(Response.ok(ingredientService.getAllMembers()));
+//        } catch (Exception ex) {
+//            return ResponseEntity.status(500).body(Response.exception(ex));
+//        }
+//    }
+
+
+    @PostMapping(produces = "application/json")
+    @ApiOperation(value = "Create New Ingredient ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Added New Ingredient successfully"),
+            @ApiResponse(code = 406, message = "Json content not acceptable"),
+            @ApiResponse(code = 500, message = "Unexpected Error")
+    })
+    public @ResponseBody
+    ResponseEntity<Response<IngredientResponseDto>> createIngredient(@RequestBody IngredientRequestDto req) {
+
+        try {
+            return ResponseEntity.ok(Response.ok(ingredientService.createIngredient(req)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+
+
 }

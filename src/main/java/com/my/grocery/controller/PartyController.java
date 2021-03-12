@@ -13,11 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/party")
-@Api(tags = {"Party"}, description = "Party api")
 public class PartyController {
     @Autowired
     private PartyService partyService;
-
 
     @GetMapping("/getAllMembers")
     @ApiOperation(value = "Get All Members")
@@ -31,11 +29,4 @@ public class PartyController {
         }
     }
 
-    @GetMapping("/getGreetings")
-    @ApiOperation(value = "Get greetings")
-    public @ResponseBody
-    String getGreeting() {
-
-        return "Hello World";
-    }
 }
