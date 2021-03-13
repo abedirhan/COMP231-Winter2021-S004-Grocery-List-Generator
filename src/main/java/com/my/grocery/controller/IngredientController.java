@@ -11,23 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/ingredient")
 public class IngredientController {
     @Autowired
     private IngredientService ingredientService;
-//    @PostMapping()
-//    @ApiOperation(value = "Get All Members")
-//    public @ResponseBody
-//    ResponseEntity<Response<List<Party>>> getAllMembers() {
-//
-//        try {
-//            return ResponseEntity.ok(Response.ok(ingredientService.getAllMembers()));
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(500).body(Response.exception(ex));
-//        }
-//    }
-
 
     @PostMapping(produces = "application/json")
     @ApiOperation(value = "Create New Ingredient ")
@@ -47,5 +37,30 @@ public class IngredientController {
         }
     }
 
+    @GetMapping("/getAll")
+    @ApiOperation(value = "Get List of Ingredients ")
+    public @ResponseBody
+    ResponseEntity<Response<List<IngredientResponseDto>>> getIngredients() {
+
+        try {
+            return ResponseEntity.ok(Response.ok(ingredientService.getListOfIngredients()));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+
+    @GetMapping("/getByName")
+    @ApiOperation(value = "Get Ingredients by Name ")
+    public @ResponseBody
+    ResponseEntity<Response<List<IngredientResponseDto>>> getIngredientByName(@RequestParam String name) {
+
+        try {
+            return ResponseEntity.ok(Response.ok(ingredientService.getIngredientbyName(name)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
 
 }
