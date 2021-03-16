@@ -2,14 +2,12 @@ package com.my.grocery.controller;
 
 import com.my.grocery.controller.base.dto.Response;
 import com.my.grocery.controller.base.dto.Result;
-import com.my.grocery.dto.ingredient.IngredientResponseDto;
 import com.my.grocery.dto.recipe.RecipeRequestDto;
 import com.my.grocery.dto.recipe.RecipeResponseDto;
 import com.my.grocery.service.RecipeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,16 +48,26 @@ public class RecipeController {
             return ResponseEntity.status(500).body((Response.exception(ex)));
         }
     }
-
-    @DeleteMapping(value = "/{id}")
-    @ApiOperation(value = "Delete Recipe")
-    public ResponseEntity<Result<String>> deleteUnmatchedLabReport(@PathVariable long id) {
-
-        if (id == 0L)
-            return ResponseEntity.status(500)
-                    .body(new Result<>(new Exception("Recipe Id is missing.")));
+    @GetMapping("/getAllRecipesByUserId")
+    @ApiOperation(value = "Get List of Recipes By User Id")
+    public @ResponseBody
+    ResponseEntity<Response<List<RecipeResponseDto>>> getIngredients(String userId) {
         try {
-            recipeService.deleteRecipe(id);
+            return ResponseEntity.ok(Response.ok(recipeService.getListOfRecipesByUserId(userId)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+    @DeleteMapping(value = "/{id}/{userId}")
+    @ApiOperation(value = "Delete Recipe")
+    public ResponseEntity<Result<String>> deleteRecipe(@PathVariable long id, @PathVariable String userId) {
+
+        if (id ==0l && userId==null)
+            return ResponseEntity.status(500)
+                    .body(new Result<>(new Exception("Recipe or userId is missing.")));
+        try {
+            recipeService.deleteRecipe(id,userId);
             return ResponseEntity.ok(new Result<>("Recipe deleted successfully"));
         } catch (Exception ex) {
 

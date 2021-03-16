@@ -16,6 +16,8 @@ public class RecipeRequestDto {
 
 
     private String recipeName;
+    private String description;
+    private String price;
     private Byte[] recipePhoto;
     private String partyId;
 
@@ -25,6 +27,8 @@ public class RecipeRequestDto {
     public RecipeRequestDto(Recipe recipe) {
 
         setRecipeName(recipe.getRecipeName());
+        setPrice(recipe.getPrice());
+        setDescription(recipe.getDescription());
         setRecipePhoto(recipe.getRecipePhoto());
         setPartyId(recipe.getParty().getPartyId());
 

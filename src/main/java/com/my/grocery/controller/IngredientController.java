@@ -56,7 +56,7 @@ public class IngredientController {
     ResponseEntity<Response<List<IngredientResponseDto>>> getIngredientByName(@RequestParam String name) {
 
         try {
-            return ResponseEntity.ok(Response.ok(ingredientService.getIngredientbyName(name)));
+            return ResponseEntity.ok(Response.ok(ingredientService.getIngredientByName(name)));
 
         } catch (Exception ex) {
             return ResponseEntity.status(500).body((Response.exception(ex)));

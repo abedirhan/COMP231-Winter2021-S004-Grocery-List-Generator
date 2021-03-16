@@ -52,12 +52,11 @@ public class IngredientService {
             dto.setPartyId(ingredients.get(i).getParty().getPartyId());
             ls.add(dto);
         }
-
         return ls;
     }
 
     // Get All ingredients by similar name
-    public List<IngredientResponseDto> getIngredientbyName(String name) {
+    public List<IngredientResponseDto> getIngredientByName(String name) {
 
         List<Ingredient> ingredients = ingredientRepository.findByName(name);
         List<IngredientResponseDto> ls = new ArrayList<>();

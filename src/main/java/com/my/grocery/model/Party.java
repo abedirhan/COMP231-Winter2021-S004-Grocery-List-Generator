@@ -21,7 +21,6 @@ import javax.persistence.Table;
 public class Party {
     @Id
     @Column(name = "party_id")
-  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected String partyId;
 
     @Basic(fetch = FetchType.EAGER, optional = true)

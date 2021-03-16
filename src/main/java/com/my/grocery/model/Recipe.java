@@ -30,6 +30,16 @@ public class Recipe {
     @Length(max = 64)
     protected String recipeName;
 
+    @Basic(fetch = FetchType.EAGER, optional = true)
+    @Column(name = "description", length = 64)
+    @Length(max = 1500)
+    protected String description;
+
+    @Basic(fetch = FetchType.EAGER, optional = true)
+    @Column(name = "price", length = 64)
+    @Length(max = 64)
+    protected String price;
+
     @Lob
     @Basic(fetch = FetchType.LAZY, optional = true)
     @Column(name = "recipe_photo")

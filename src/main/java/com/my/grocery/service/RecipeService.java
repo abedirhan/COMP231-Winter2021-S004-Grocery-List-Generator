@@ -46,6 +46,8 @@ public class RecipeService {
         Party party = partyRepository.findById(req.getPartyId());
         Recipe recipe = new Recipe();
         recipe.setRecipeName(req.getRecipeName());
+        recipe.setPrice(req.getPrice());
+        recipe.setDescription(req.getDescription());
         recipe.setRecipePhoto(req.getRecipePhoto());
         recipe.setParty(party);
         recipeRepository.save(recipe);
@@ -86,6 +88,41 @@ public class RecipeService {
             RecipeResponseDto dto = new RecipeResponseDto();
             dto.setRecipeId(recipes.get(i).getRecipeId());
             dto.setRecipeName(recipes.get(i).getRecipeName());
+            dto.setPrice(recipes.get(i).getPrice());
+            dto.setDescription(recipes.get(i).getDescription());
+            dto.setRecipePhoto(recipes.get(i).getRecipePhoto());
+            dto.setPartyId(recipes.get(i).getParty().getPartyId());
+            List<RecipeItem> recipeItemList = recipes.get(i).getItems();
+            List<RecipeItemResponseDto> dtos = new ArrayList<>();
+
+            for (var j = 0; j < recipeItemList.size(); j++) {
+                RecipeItemResponseDto resDto = new RecipeItemResponseDto();
+                resDto.setIngredientId(recipeItemList.get(j).getIngredient().getIngredientId());
+                resDto.setRecipeId(recipeItemList.get(j).getRecipe().getRecipeId());
+                resDto.setItemId(recipeItemList.get(j).getItemId());
+                resDto.setItemQuantity(recipeItemList.get(j).getItemQuantity());
+                dtos.add(resDto);
+
+            }
+            dto.setRecipeItemList(dtos);
+            ls.add(dto);
+        }
+
+        return ls;
+    }
+
+    // Get list of recipes by User Id
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public List<RecipeResponseDto> getListOfRecipesByUserId(String userId) {
+        Assert.notNull(userId, "User id is required.");
+        List<Recipe> recipes = recipeRepository.getRecipeByUserId(userId);
+        List<RecipeResponseDto> ls = new ArrayList<>();
+        for (int i = 0; i < recipes.size(); i++) {
+            RecipeResponseDto dto = new RecipeResponseDto();
+            dto.setRecipeId(recipes.get(i).getRecipeId());
+            dto.setRecipeName(recipes.get(i).getRecipeName());
+            dto.setPrice(recipes.get(i).getPrice());
+            dto.setDescription(recipes.get(i).getDescription());
             dto.setRecipePhoto(recipes.get(i).getRecipePhoto());
             dto.setPartyId(recipes.get(i).getParty().getPartyId());
             List<RecipeItem> recipeItemList = recipes.get(i).getItems();
@@ -108,17 +145,22 @@ public class RecipeService {
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void deleteRecipe(long id) throws Exception {
+    public void deleteRecipe(long id, String userId) throws Exception {
+        Assert.notNull(userId, "User id is required.");
+        Assert.notNull(id, "Recipe id is required.");
 
         Optional<Recipe> deleteRecipe = recipeRepository.findById(id);
-
         if (deleteRecipe == null) throw new NotFoundException("Recipe is not invalid");
-        List<RecipeItem> list = recipeItemRepository.getRecipeItemByRecipeId(id);
-        for (var i : list) {
-            recipeItemRepository.delete(i);
+        if (deleteRecipe.get().getParty().getPartyId().equals(userId)) {
+            List<RecipeItem> list = recipeItemRepository.getRecipeItemByRecipeId(id);
+            for (var i : list) {
+                recipeItemRepository.delete(i);
+            }
+            deleteRecipe.get().getItems().removeAll(deleteRecipe.get().getItems());
+            recipeRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("User can not delete this recipe");
         }
-        deleteRecipe.get().getItems().removeAll(deleteRecipe.get().getItems());
-        recipeRepository.deleteById(id);
     }
 
 }

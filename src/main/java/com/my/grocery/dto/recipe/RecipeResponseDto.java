@@ -18,6 +18,8 @@ public class RecipeResponseDto {
 
     private Long recipeId;
     private String recipeName;
+    private String description;
+    private String price;
     private Byte[] recipePhoto;
     private String partyId;
 
@@ -26,22 +28,12 @@ public class RecipeResponseDto {
 
     public RecipeResponseDto(Recipe recipe, List<RecipeItemResponseDto> _recipeItemList ) {
         setRecipeId(recipe.getRecipeId());
+        setPrice(recipe.getPrice());
+        setDescription(recipe.getDescription());
         setRecipeName(recipe.getRecipeName());
         setRecipePhoto(recipe.getRecipePhoto());
         setPartyId(recipe.getParty().getPartyId());
         setRecipeItemList(_recipeItemList);
-
-
-
-
-
-//        recipe.getItems().forEach((RecipeItem)recipeItem ->{
-//            if (recipeItem instanceof RecipeItem) {
-//                recipeItemList.add(new RecipeItemResponseDto((RecipeItem) recipeItem));
-//            }
-//        });
-
-   //    recipeItemList.addAll(_recipeItemList.stream().map( inputMethod ->new RecipeItemResponseDto (inputMethod) ).collect(Collectors.toList()));
 
     }
 }
