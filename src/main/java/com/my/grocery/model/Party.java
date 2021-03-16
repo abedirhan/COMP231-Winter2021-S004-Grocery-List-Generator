@@ -17,17 +17,12 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @Entity
-@BatchSize(size = 10)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@FilterDef(name = "deletedEntityFilter")
-@Filters({@Filter(name = "deletedEntityFilter",condition = "deleted <> 1")})
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "party", uniqueConstraints =  {@UniqueConstraint(columnNames =  {"party_id"})})
 public class Party {
     @Id
     @Column(name = "party_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long partyId;
+  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected String partyId;
 
     @Basic(fetch = FetchType.EAGER, optional = true)
     @Column(name = "email", length = 64)

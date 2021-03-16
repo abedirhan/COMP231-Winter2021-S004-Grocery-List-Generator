@@ -4,26 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
 @Entity
-@BatchSize(size = 10)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@FilterDef(name = "deletedEntityFilter")
-@Filters({@Filter(name = "deletedEntityFilter", condition = "deleted <> 1")
-})
 @Table(name = "recipe_item", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"item_id"})})
 @DiscriminatorValue("recipe")
@@ -34,7 +23,7 @@ public class RecipeItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long itemId;
 
-    @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id")
     protected Recipe recipe;
 
@@ -42,8 +31,7 @@ public class RecipeItem {
     @Column(name = "item_quantity", length = 64)
     protected String itemQuantity;
 
-    // icerik onceden olusturuluyor
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id")
     protected Ingredient ingredient;
 

@@ -43,11 +43,11 @@ public class RecipeService {
         Assert.notNull(req.getRecipeName(), "Recipe name is required.");
         Assert.notNull(req.getPartyId(), "Party Id is required.");
 
-        Optional<Party> party = partyRepository.findById(req.getPartyId());
+        Party party = partyRepository.findById(req.getPartyId());
         Recipe recipe = new Recipe();
         recipe.setRecipeName(req.getRecipeName());
         recipe.setRecipePhoto(req.getRecipePhoto());
-        recipe.setParty(party.get());
+        recipe.setParty(party);
         recipeRepository.save(recipe);
         Optional<Recipe> existingRecipe = recipeRepository.findById(recipe.getRecipeId());
 
@@ -112,11 +112,12 @@ public class RecipeService {
 
         Optional<Recipe> deleteRecipe = recipeRepository.findById(id);
 
-        if (deleteRecipe == null) throw new NotFoundException("Lab Report Id is invalid");
+        if (deleteRecipe == null) throw new NotFoundException("Recipe is not invalid");
         List<RecipeItem> list = recipeItemRepository.getRecipeItemByRecipeId(id);
         for (var i : list) {
             recipeItemRepository.delete(i);
         }
+        deleteRecipe.get().getItems().removeAll(deleteRecipe.get().getItems());
         recipeRepository.deleteById(id);
     }
 

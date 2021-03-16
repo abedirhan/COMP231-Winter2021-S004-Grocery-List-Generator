@@ -17,11 +17,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@BatchSize(size = 10)
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@FilterDef(name = "deletedEntityFilter")
-@Filters({@Filter(name = "deletedEntityFilter",condition = "deleted <> 1")})
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "recipe", uniqueConstraints =  {@UniqueConstraint(columnNames =  {"recipe_id"})})
 
 public class Recipe {
@@ -41,12 +36,8 @@ public class Recipe {
     protected Byte[] recipePhoto;
 
     @OneToMany(targetEntity = RecipeItem.class, cascade =  {
-            CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}
-            , fetch = FetchType.LAZY)
-    @Cascade(value =  {
-            org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.PERSIST,
-            org.hibernate.annotations.CascadeType.DELETE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN}
-    )
+            CascadeType.ALL}
+            , fetch = FetchType.EAGER,orphanRemoval = true)
     @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id")
     protected List<RecipeItem> items;
 

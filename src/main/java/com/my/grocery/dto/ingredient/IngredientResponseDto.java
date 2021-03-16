@@ -14,7 +14,7 @@ public class IngredientResponseDto {
     private String ingredientName;
     private String unitType;
     private String calorie;
-    private Long partyId;
+    private String partyId;
 
 
     public IngredientResponseDto(Ingredient ingredient) {

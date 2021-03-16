@@ -57,7 +57,7 @@ public class RecipeController {
 
         if (id == 0L)
             return ResponseEntity.status(500)
-                    .body(new Result<>(new Exception("LabReportId is missing.")));
+                    .body(new Result<>(new Exception("Recipe Id is missing.")));
         try {
             recipeService.deleteRecipe(id);
             return ResponseEntity.ok(new Result<>("Recipe deleted successfully"));

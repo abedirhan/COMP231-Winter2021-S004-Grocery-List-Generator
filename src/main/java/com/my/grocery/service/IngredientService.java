@@ -27,12 +27,12 @@ public class IngredientService {
         Assert.notNull(req.getPartyId(), "Party Id is required.");
         Assert.notNull(req.getUnitType(), "Unit Type Id is required.");
         Assert.notNull(req.getCalorie(), "Calorie is required.");
-        Optional<Party> party = partyRepository.findById(req.getPartyId());
+        Party party = partyRepository.findById(req.getPartyId());
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientName(req.getIngredientName());
         ingredient.setCalorie(req.getCalorie());
         ingredient.setUnitType(req.getUnitType());
-        ingredient.setParty(party.get());
+        ingredient.setParty(party);
 
         ingredientRepository.save(ingredient);
         return new IngredientResponseDto(ingredient);

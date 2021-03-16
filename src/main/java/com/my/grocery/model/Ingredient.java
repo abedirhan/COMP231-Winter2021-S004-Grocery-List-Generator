@@ -15,11 +15,6 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @Entity
-@BatchSize(size = 10)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@FilterDef(name = "deletedEntityFilter")
-@Filters({@Filter(name = "deletedEntityFilter",condition = "deleted <> 1")})
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @javax.persistence.Table(name = "ingredient", uniqueConstraints =  {@UniqueConstraint(columnNames =  {"ingredient_id"})})
 public class Ingredient {
     @Id
