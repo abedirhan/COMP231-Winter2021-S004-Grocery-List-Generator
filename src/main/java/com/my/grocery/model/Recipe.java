@@ -61,10 +61,8 @@ public class Recipe {
 
 
     public void addRecipeItem(RecipeItem recipeItem){
-        if (this.items == null) this.items = new ArrayList<>();
-        if (recipeItem != null){
-            recipeItem.setRecipe(this);
-            this.items.add(recipeItem);
-        }
+        this.items = items == null ? new ArrayList<>(): items;
+        recipeItem.setRecipe(this);
+        items.add(recipeItem);
     }
 }
