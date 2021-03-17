@@ -20,7 +20,7 @@ public class RecipeResponseDto {
     private String recipeName;
     private String description;
     private String price;
-    private Byte[] recipePhoto;
+    private String recipePhoto;
     private String partyId;
 
     List<RecipeItemResponseDto> recipeItemList =new ArrayList<>();

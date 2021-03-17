@@ -43,7 +43,8 @@ public class Recipe {
     @Lob
     @Basic(fetch = FetchType.LAZY, optional = true)
     @Column(name = "recipe_photo")
-    protected Byte[] recipePhoto;
+    @Length(max = 1500)
+    protected String recipePhoto;
 
     @OneToMany(targetEntity = RecipeItem.class, cascade =  {
             CascadeType.ALL}

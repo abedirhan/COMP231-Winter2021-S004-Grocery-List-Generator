@@ -18,7 +18,7 @@ public class RecipeRequestDto {
     private String recipeName;
     private String description;
     private String price;
-    private Byte[] recipePhoto;
+    private String recipePhoto;
     private String partyId;
 
     List<RecipeItemRequestDto> recipeItemList = new ArrayList<>();
