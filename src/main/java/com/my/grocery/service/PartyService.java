@@ -28,7 +28,7 @@ public class PartyService {
       return parties;
     }
     public PartyDto createUser(PartyRequestDto req) {
-
+        System.out.println("POST service RECEIVED");
         Party newUser = new Party();
         Assert.notNull(req.getUserId(), "User id is required.");
         Assert.notNull(req.getRole(), "Role id is required.");

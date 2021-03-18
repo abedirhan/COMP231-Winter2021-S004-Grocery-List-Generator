@@ -45,6 +45,7 @@ public class PartyController {
     ResponseEntity<Response<PartyDto>> createUser(@RequestBody PartyRequestDto req) {
 
         try {
+            System.out.println("POST RECEIVED");
             return ResponseEntity.ok(Response.ok(partyService.createUser(req)));
 
         } catch (Exception ex) {
