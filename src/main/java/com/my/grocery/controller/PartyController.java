@@ -2,6 +2,7 @@ package com.my.grocery.controller;
 
 import com.my.grocery.controller.base.dto.Response;
 import com.my.grocery.dto.party.PartyDto;
+import com.my.grocery.dto.party.PartyRequestDto;
 import com.my.grocery.dto.recipe.RecipeRequestDto;
 import com.my.grocery.dto.recipe.RecipeResponseDto;
 import com.my.grocery.model.Party;
@@ -41,10 +42,10 @@ public class PartyController {
             @ApiResponse(code = 500, message = "Unexpected Error")
     })
     public @ResponseBody
-    ResponseEntity<Response<PartyDto>> createUser(@RequestParam String id) {
+    ResponseEntity<Response<PartyDto>> createUser(@RequestBody PartyRequestDto req) {
 
         try {
-            return ResponseEntity.ok(Response.ok(partyService.createUser(id)));
+            return ResponseEntity.ok(Response.ok(partyService.createUser(req)));
 
         } catch (Exception ex) {
             return ResponseEntity.status(500).body((Response.exception(ex)));
