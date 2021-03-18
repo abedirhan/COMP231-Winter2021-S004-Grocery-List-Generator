@@ -28,12 +28,7 @@ public class Party {
     @Length(max = 64)
     protected String email;
 
-    @OneToOne(targetEntity = Role.class, cascade =  {
-            CascadeType.PERSIST, CascadeType.MERGE}
-            , fetch = FetchType.LAZY, optional = true)
-    @Cascade(value =  {
-            org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.PERSIST}
-    )
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     protected Role role;
 
