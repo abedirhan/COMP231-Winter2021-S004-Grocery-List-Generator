@@ -40,6 +40,8 @@ public class RecipeService {
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public RecipeResponseDto createRecipe(RecipeRequestDto req) {
         Assert.notNull(req.getRecipeItemList(), "Recipe ingredients is required.");
+        Assert.notNull(req.getDescription(), "Recipe description is required.");
+        Assert.notNull(req.getPrice(), "Recipe price is required.");
         Assert.notNull(req.getRecipeName(), "Recipe name is required.");
         Assert.notNull(req.getPartyId(), "Party Id is required.");
 
@@ -48,7 +50,9 @@ public class RecipeService {
         recipe.setRecipeName(req.getRecipeName());
         recipe.setPrice(req.getPrice());
         recipe.setDescription(req.getDescription());
-        recipe.setRecipePhoto(req.getRecipePhoto());
+        if (req.getRecipePhoto()!=null){
+            recipe.setRecipePhoto(req.getRecipePhoto());
+        }
         recipe.setParty(party);
         recipeRepository.save(recipe);
         Optional<Recipe> existingRecipe = recipeRepository.findById(recipe.getRecipeId());
@@ -142,6 +146,36 @@ public class RecipeService {
         }
 
         return ls;
+    }
+
+    // Get recipe by Id
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public RecipeResponseDto getRecipeById(long id) {
+        Assert.notNull(id, "User id is required.");
+        Optional<Recipe> recipes = recipeRepository.findById(id);
+        RecipeResponseDto dto = new RecipeResponseDto();
+
+        dto.setRecipeId(recipes.get().getRecipeId());
+        dto.setRecipeName(recipes.get().getRecipeName());
+        dto.setPrice(recipes.get().getPrice());
+        dto.setDescription(recipes.get().getDescription());
+        dto.setRecipePhoto(recipes.get().getRecipePhoto());
+        dto.setPartyId(recipes.get().getParty().getPartyId());
+        List<RecipeItem> recipeItemList = recipes.get().getItems();
+        List<RecipeItemResponseDto> dtos = new ArrayList<>();
+
+        for (var j = 0; j < recipeItemList.size(); j++) {
+            RecipeItemResponseDto resDto = new RecipeItemResponseDto();
+            resDto.setIngredientId(recipeItemList.get(j).getIngredient().getIngredientId());
+            resDto.setRecipeId(recipeItemList.get(j).getRecipe().getRecipeId());
+            resDto.setItemId(recipeItemList.get(j).getItemId());
+            resDto.setItemQuantity(recipeItemList.get(j).getItemQuantity());
+            dtos.add(resDto);
+
+        }
+        dto.setRecipeItemList(dtos);
+
+        return dto;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

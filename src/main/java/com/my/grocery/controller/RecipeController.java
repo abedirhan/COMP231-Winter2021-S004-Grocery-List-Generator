@@ -28,7 +28,7 @@ public class RecipeController {
             @ApiResponse(code = 500, message = "Unexpected Error")
     })
     public @ResponseBody
-    ResponseEntity<Response<RecipeResponseDto>> createIngredient(@RequestBody RecipeRequestDto req) {
+    ResponseEntity<Response<RecipeResponseDto>> createRecipe(@RequestBody RecipeRequestDto req) {
 
         try {
             return ResponseEntity.ok(Response.ok(recipeService.createRecipe(req)));
@@ -37,10 +37,11 @@ public class RecipeController {
             return ResponseEntity.status(500).body((Response.exception(ex)));
         }
     }
+
     @GetMapping("/getAllRecipes")
     @ApiOperation(value = "Get List of Recipes")
     public @ResponseBody
-    ResponseEntity<Response<List<RecipeResponseDto>>> getIngredients() {
+    ResponseEntity<Response<List<RecipeResponseDto>>> getAllRecipes() {
         try {
             return ResponseEntity.ok(Response.ok(recipeService.getListOfRecipes()));
 
@@ -48,10 +49,11 @@ public class RecipeController {
             return ResponseEntity.status(500).body((Response.exception(ex)));
         }
     }
+
     @GetMapping("/getAllRecipesByUserId")
     @ApiOperation(value = "Get List of Recipes By User Id")
     public @ResponseBody
-    ResponseEntity<Response<List<RecipeResponseDto>>> getIngredients(String userId) {
+    ResponseEntity<Response<List<RecipeResponseDto>>> getRecipeByUserId(String userId) {
         try {
             return ResponseEntity.ok(Response.ok(recipeService.getListOfRecipesByUserId(userId)));
 
@@ -59,15 +61,29 @@ public class RecipeController {
             return ResponseEntity.status(500).body((Response.exception(ex)));
         }
     }
+
+    // Get single recipe by Id
+    @GetMapping("/getRecipesById")
+    @ApiOperation(value = "Get Recipes By Id")
+    public @ResponseBody
+    ResponseEntity<Response<RecipeResponseDto>> getRecipeById(Long id) {
+        try {
+            return ResponseEntity.ok(Response.ok(recipeService.getRecipeById(id)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+
     @DeleteMapping(value = "/{id}/{userId}")
     @ApiOperation(value = "Delete Recipe")
     public ResponseEntity<Result<String>> deleteRecipe(@PathVariable long id, @PathVariable String userId) {
 
-        if (id ==0l && userId==null)
+        if (id == 0l && userId == null)
             return ResponseEntity.status(500)
                     .body(new Result<>(new Exception("Recipe or userId is missing.")));
         try {
-            recipeService.deleteRecipe(id,userId);
+            recipeService.deleteRecipe(id, userId);
             return ResponseEntity.ok(new Result<>("Recipe deleted successfully"));
         } catch (Exception ex) {
 
