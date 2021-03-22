@@ -74,6 +74,24 @@ public class RecipeController {
             return ResponseEntity.status(500).body((Response.exception(ex)));
         }
     }
+    //update recipe
+    @PutMapping(value = "/updateRecipe", produces = "application/json")
+    @ApiOperation(value = "Update Recipe ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Updated Recipe successfully"),
+            @ApiResponse(code = 406, message = "Json content not acceptable"),
+            @ApiResponse(code = 500, message = "Unexpected Error")
+    })
+    public @ResponseBody
+    ResponseEntity<Response<RecipeResponseDto>> updateRecipe(@RequestBody RecipeRequestDto req,@RequestParam long recipeId) {
+
+        try {
+            return ResponseEntity.ok(Response.ok(recipeService.updateRecipe(req,recipeId)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
 
     @DeleteMapping(value = "/{id}/{userId}")
     @ApiOperation(value = "Delete Recipe")

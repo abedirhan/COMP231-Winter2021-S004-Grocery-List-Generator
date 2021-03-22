@@ -50,7 +50,7 @@ public class RecipeService {
         recipe.setRecipeName(req.getRecipeName());
         recipe.setPrice(req.getPrice());
         recipe.setDescription(req.getDescription());
-        if (req.getRecipePhoto()!=null){
+        if (req.getRecipePhoto() != null) {
             recipe.setRecipePhoto(req.getRecipePhoto());
         }
         recipe.setParty(party);
@@ -176,6 +176,58 @@ public class RecipeService {
         dto.setRecipeItemList(dtos);
 
         return dto;
+    }
+
+    // update recipe
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public RecipeResponseDto updateRecipe(RecipeRequestDto req, long recipeId) {
+        Assert.notNull(req.getRecipeItemList(), "Recipe ingredients is required.");
+        Assert.notNull(recipeId, "RecipeId is required.");
+        Assert.notNull(req.getDescription(), "Recipe description is required.");
+        Assert.notNull(req.getPrice(), "Recipe price is required.");
+        Assert.notNull(req.getRecipeName(), "Recipe name is required.");
+        Assert.notNull(req.getPartyId(), "Party Id is required.");
+
+        Party party = partyRepository.findById(req.getPartyId());
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        String partyId = req.getPartyId();
+        if (partyId == recipe.get().getParty().getPartyId()) {
+            recipe.get().setRecipeName(req.getRecipeName());
+            recipe.get().setPrice(req.getPrice());
+            recipe.get().setDescription(req.getDescription());
+            if (req.getRecipePhoto() != null) {
+                recipe.get().setRecipePhoto(req.getRecipePhoto());
+            }
+            recipe.get().setParty(party);
+            recipeRepository.save(recipe.get());
+            Optional<Recipe> existingRecipe = recipeRepository.findById(recipe.get().getRecipeId());
+
+            if (req.getRecipeItemList() != null) {
+                for (var i = 0; i < req.getRecipeItemList().size(); i++) {
+                    RecipeItem item = new RecipeItem();
+                    Optional<Ingredient> ingredient = ingredientRepository.findById(req.getRecipeItemList().get(i).getIngredientId());
+                    item.setIngredient(ingredient.get());
+                    item.setItemQuantity(req.getRecipeItemList().get(i).getItemQuantity());
+                    item.setRecipe(existingRecipe.get());
+                    existingRecipe.get().addRecipeItem(item);
+                    recipeItemRepository.save(item);
+                }
+            }
+            recipeRepository.save(existingRecipe.get());
+            List<RecipeItem> recipeItemList = recipeItemRepository.getRecipeItemList(existingRecipe.get().getRecipeId());
+            List<RecipeItemResponseDto> dtos = new ArrayList<>();
+            for (int i = 0; i < recipeItemList.size(); i++) {
+                RecipeItemResponseDto dto = new RecipeItemResponseDto();
+                dto.setIngredientId(recipeItemList.get(i).getIngredient().getIngredientId());
+                dto.setRecipeId(recipeItemList.get(i).getRecipe().getRecipeId());
+                dto.setItemId(recipeItemList.get(i).getItemId());
+                dto.setItemQuantity(recipeItemList.get(i).getItemQuantity());
+                dtos.add(dto);
+            }
+            return new RecipeResponseDto(existingRecipe.get(), dtos);
+        } else {
+            throw new IllegalArgumentException("User can not update this recipe");
+        }
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
