@@ -2,6 +2,7 @@ package com.my.grocery.controller;
 
 import com.my.grocery.controller.base.dto.Response;
 import com.my.grocery.controller.base.dto.Result;
+import com.my.grocery.dto.recipe.GroceryResponseDto;
 import com.my.grocery.dto.recipe.RecipeRequestDto;
 import com.my.grocery.dto.recipe.RecipeResponseDto;
 import com.my.grocery.service.RecipeService;
@@ -87,6 +88,19 @@ public class RecipeController {
 
         try {
             return ResponseEntity.ok(Response.ok(recipeService.updateRecipe(req,recipeId)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+
+    //Generate grocery list
+    @GetMapping("/generateGroceryList")
+    @ApiOperation(value = "Generate Grocery List")
+    public @ResponseBody
+    ResponseEntity<Response<GroceryResponseDto>> generateGroceryList(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(Response.ok(recipeService.generateGroceryList(id)));
 
         } catch (Exception ex) {
             return ResponseEntity.status(500).body((Response.exception(ex)));

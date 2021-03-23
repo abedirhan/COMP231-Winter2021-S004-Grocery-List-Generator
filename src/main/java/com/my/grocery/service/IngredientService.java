@@ -55,6 +55,9 @@ public class IngredientService {
             if (ingredients.get(i).getCalorie() != null) {
                 dto.setCalorie(ingredients.get(i).getCalorie());
             }
+            if (ingredients.get(i).getUnitType() != null) {
+                dto.setCalorie(ingredients.get(i).getUnitType());
+            }
             if (ingredients.get(i).getParty() != null) {
                 dto.setPartyId(ingredients.get(i).getParty().getPartyId());
             }
@@ -78,6 +81,9 @@ public class IngredientService {
             }
             if (ingredients.get(i).getCalorie() != null) {
                 dto.setCalorie(ingredients.get(i).getCalorie());
+            }
+            if (ingredients.get(i).getUnitType() != null) {
+                dto.setCalorie(ingredients.get(i).getUnitType());
             }
             if (ingredients.get(i).getParty() != null) {
                 dto.setPartyId(ingredients.get(i).getParty().getPartyId());

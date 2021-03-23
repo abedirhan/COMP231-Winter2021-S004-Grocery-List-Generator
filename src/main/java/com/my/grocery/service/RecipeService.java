@@ -1,10 +1,9 @@
 package com.my.grocery.service;
 
+import com.google.common.math.BigIntegerMath;
 import com.my.grocery.dto.ingredient.IngredientRequestDto;
 import com.my.grocery.dto.ingredient.IngredientResponseDto;
-import com.my.grocery.dto.recipe.RecipeItemResponseDto;
-import com.my.grocery.dto.recipe.RecipeRequestDto;
-import com.my.grocery.dto.recipe.RecipeResponseDto;
+import com.my.grocery.dto.recipe.*;
 import com.my.grocery.model.Ingredient;
 import com.my.grocery.model.Party;
 import com.my.grocery.model.Recipe;
@@ -21,9 +20,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.Tuple;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class RecipeService {
@@ -35,6 +41,8 @@ public class RecipeService {
     private IRecipeItemRepository recipeItemRepository;
     @Autowired
     private IIngredientRepository ingredientRepository;
+    @Autowired
+    private EntityManager manager;
 
     //Create new ingredient
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -191,7 +199,7 @@ public class RecipeService {
         Party party = partyRepository.findById(req.getPartyId());
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         String partyId = req.getPartyId();
-        if (partyId == recipe.get().getParty().getPartyId()) {
+        if (partyId.equals(recipe.get().getParty().getPartyId())) {
             recipe.get().setRecipeName(req.getRecipeName());
             recipe.get().setPrice(req.getPrice());
             recipe.get().setDescription(req.getDescription());
@@ -201,17 +209,32 @@ public class RecipeService {
             recipe.get().setParty(party);
             recipeRepository.save(recipe.get());
             Optional<Recipe> existingRecipe = recipeRepository.findById(recipe.get().getRecipeId());
+            List<Integer> reqItemIngredientIdList = new ArrayList<>();
+            for (int i = 0; i < req.getRecipeItemList().size(); i++) {
+                reqItemIngredientIdList.add(Math.toIntExact(req.getRecipeItemList().get(i).getIngredientId()));
+            }
+            List<Integer> existingItemListIngredientId = new ArrayList<>();
+            List<RecipeItem> existingItemList = recipeItemRepository.getRecipeItemByRecipeId(recipeId);
+            for (int i = 0; i < existingItemList.size(); i++) {
+                existingItemListIngredientId.add(Math.toIntExact(existingItemList.get(i).getIngredient().getIngredientId()));
+            }
 
             if (req.getRecipeItemList() != null) {
+
                 for (var i = 0; i < req.getRecipeItemList().size(); i++) {
-                    RecipeItem item = new RecipeItem();
-                    Optional<Ingredient> ingredient = ingredientRepository.findById(req.getRecipeItemList().get(i).getIngredientId());
-                    item.setIngredient(ingredient.get());
-                    item.setItemQuantity(req.getRecipeItemList().get(i).getItemQuantity());
-                    item.setRecipe(existingRecipe.get());
-                    existingRecipe.get().addRecipeItem(item);
-                    recipeItemRepository.save(item);
+                    //
+                    if (!existingItemListIngredientId.contains(reqItemIngredientIdList.get(i))) {
+                        RecipeItem item = new RecipeItem();
+                        Optional<Ingredient> ingredient = ingredientRepository.findById(req.getRecipeItemList().get(i).getIngredientId());
+                        item.setIngredient(ingredient.get());
+                        item.setItemQuantity(req.getRecipeItemList().get(i).getItemQuantity());
+                        item.setRecipe(existingRecipe.get());
+                        existingRecipe.get().addRecipeItem(item);
+                        recipeItemRepository.save(item);
+                    }
+                    //
                 }
+
             }
             recipeRepository.save(existingRecipe.get());
             List<RecipeItem> recipeItemList = recipeItemRepository.getRecipeItemList(existingRecipe.get().getRecipeId());
@@ -228,6 +251,17 @@ public class RecipeService {
         } else {
             throw new IllegalArgumentException("User can not update this recipe");
         }
+    }
+
+    //Generate Grocery list
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public GroceryResponseDto generateGroceryList(Long recipeId) {
+        Assert.notNull(recipeId, "User id is required.");
+
+        Optional<Recipe> recipeOp = recipeRepository.findById(recipeId);
+        return recipeOp.isPresent()?new GroceryResponseDto(recipeOp.get()):null;
+
+
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
