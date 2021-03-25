@@ -3,6 +3,7 @@ package com.my.grocery.controller;
 import com.my.grocery.controller.base.dto.Response;
 import com.my.grocery.controller.base.dto.Result;
 import com.my.grocery.dto.recipe.GroceryResponseDto;
+import com.my.grocery.dto.recipe.RecipeDetailsResponseDto;
 import com.my.grocery.dto.recipe.RecipeRequestDto;
 import com.my.grocery.dto.recipe.RecipeResponseDto;
 import com.my.grocery.service.RecipeService;
@@ -70,6 +71,18 @@ public class RecipeController {
     ResponseEntity<Response<RecipeResponseDto>> getRecipeById(Long id) {
         try {
             return ResponseEntity.ok(Response.ok(recipeService.getRecipeById(id)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+    // Get single recipe with ingredient name by recipeId
+    @GetMapping("/getRecipeDetailsById")
+    @ApiOperation(value = "Get Recipe Details By Id")
+    public @ResponseBody
+    ResponseEntity<Response<RecipeDetailsResponseDto>> getRecipeDetailsById(Long id) {
+        try {
+            return ResponseEntity.ok(Response.ok(recipeService.getRecipeDetailsById(id)));
 
         } catch (Exception ex) {
             return ResponseEntity.status(500).body((Response.exception(ex)));

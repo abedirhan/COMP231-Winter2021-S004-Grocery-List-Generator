@@ -264,6 +264,17 @@ public class RecipeService {
 
     }
 
+    //Get Recipe Details By Id
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public RecipeDetailsResponseDto getRecipeDetailsById(Long recipeId) {
+        Assert.notNull(recipeId, "User id is required.");
+
+        Optional<Recipe> recipeOp = recipeRepository.findById(recipeId);
+        return recipeOp.isPresent()? new RecipeDetailsResponseDto(recipeOp.get()) :null;
+
+
+    }
+
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void deleteRecipe(long id, String userId) throws Exception {
         Assert.notNull(userId, "User id is required.");
