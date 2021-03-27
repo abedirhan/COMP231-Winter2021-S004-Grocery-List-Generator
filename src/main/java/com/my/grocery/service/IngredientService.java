@@ -56,7 +56,7 @@ public class IngredientService {
                 dto.setCalorie(ingredients.get(i).getCalorie());
             }
             if (ingredients.get(i).getUnitType() != null) {
-                dto.setCalorie(ingredients.get(i).getUnitType());
+                dto.setUnitType(ingredients.get(i).getUnitType());
             }
             if (ingredients.get(i).getParty() != null) {
                 dto.setPartyId(ingredients.get(i).getParty().getPartyId());
