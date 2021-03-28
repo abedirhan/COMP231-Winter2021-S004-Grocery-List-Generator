@@ -17,6 +17,7 @@ public class RecipeItemResponseDto {
     private Long recipeId;
     private String ingredientName;
     private String unitType;
+    private String calorie;
 
     public RecipeItemResponseDto(RecipeItem item) {
         setItemId(item.getItemId());
@@ -25,6 +26,7 @@ public class RecipeItemResponseDto {
         setRecipeId(item.getRecipe().getRecipeId());
         setIngredientName(item.getIngredient().getIngredientName());
         setUnitType(item.getIngredient().getUnitType());
+        setCalorie(item.getIngredient().getCalorie());
     }
 
 }

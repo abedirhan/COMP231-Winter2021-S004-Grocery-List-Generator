@@ -115,6 +115,7 @@ public class RecipeService {
                 resDto.setItemQuantity(recipeItemList.get(j).getItemQuantity());
                 resDto.setIngredientName(recipeItemList.get(i).getIngredient().getIngredientName());
                 resDto.setUnitType(recipeItemList.get(i).getIngredient().getUnitType());
+                resDto.setCalorie(recipeItemList.get(i).getIngredient().getCalorie());
                 dtos.add(resDto);
 
             }
@@ -150,6 +151,7 @@ public class RecipeService {
                 resDto.setItemQuantity(recipeItemList.get(j).getItemQuantity());
                 resDto.setIngredientName(recipeItemList.get(i).getIngredient().getIngredientName());
                 resDto.setUnitType(recipeItemList.get(i).getIngredient().getUnitType());
+                resDto.setCalorie(recipeItemList.get(i).getIngredient().getCalorie());
                 dtos.add(resDto);
 
             }
