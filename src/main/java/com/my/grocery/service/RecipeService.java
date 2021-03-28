@@ -113,6 +113,8 @@ public class RecipeService {
                 resDto.setRecipeId(recipeItemList.get(j).getRecipe().getRecipeId());
                 resDto.setItemId(recipeItemList.get(j).getItemId());
                 resDto.setItemQuantity(recipeItemList.get(j).getItemQuantity());
+                resDto.setIngredientName(recipeItemList.get(i).getIngredient().getIngredientName());
+                resDto.setUnitType(recipeItemList.get(i).getIngredient().getUnitType());
                 dtos.add(resDto);
 
             }
