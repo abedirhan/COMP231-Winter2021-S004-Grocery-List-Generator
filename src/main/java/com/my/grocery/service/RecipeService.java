@@ -1,8 +1,5 @@
 package com.my.grocery.service;
 
-import com.google.common.math.BigIntegerMath;
-import com.my.grocery.dto.ingredient.IngredientRequestDto;
-import com.my.grocery.dto.ingredient.IngredientResponseDto;
 import com.my.grocery.dto.recipe.*;
 import com.my.grocery.model.Ingredient;
 import com.my.grocery.model.Party;
@@ -21,14 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -140,6 +132,8 @@ public class RecipeService {
             dto.setDescription(recipes.get(i).getDescription());
             dto.setRecipePhoto(recipes.get(i).getRecipePhoto());
             dto.setPartyId(recipes.get(i).getParty().getPartyId());
+            dto.setRoleId(recipes.get(i).getParty().getRole().getRoleId());
+            dto.setRoleName(recipes.get(i).getParty().getRole().getName());
             List<RecipeItem> recipeItemList = recipes.get(i).getItems();
             List<RecipeItemResponseDto> dtos = new ArrayList<>();
 
