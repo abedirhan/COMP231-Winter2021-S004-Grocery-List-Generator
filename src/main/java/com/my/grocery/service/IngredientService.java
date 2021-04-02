@@ -65,7 +65,33 @@ public class IngredientService {
         }
         return ls;
     }
+    // Get All ingredients by userId
+    public List<IngredientResponseDto> getListOfIngredientsByUserId(String userId) {
 
+        List<Ingredient> ingredients = ingredientRepository.findByNameUserId(userId);
+
+        List<IngredientResponseDto> ls = new ArrayList<>();
+        for (int i = 0; i < ingredients.size(); i++) {
+            IngredientResponseDto dto = new IngredientResponseDto();
+            if (ingredients.get(i).getIngredientId() != null) {
+                dto.setIngredientId(ingredients.get(i).getIngredientId());
+            }
+            if (ingredients.get(i).getIngredientName() != null) {
+                dto.setIngredientName(ingredients.get(i).getIngredientName());
+            }
+            if (ingredients.get(i).getCalorie() != null) {
+                dto.setCalorie(ingredients.get(i).getCalorie());
+            }
+            if (ingredients.get(i).getUnitType() != null) {
+                dto.setUnitType(ingredients.get(i).getUnitType());
+            }
+            if (ingredients.get(i).getParty() != null) {
+                dto.setPartyId(ingredients.get(i).getParty().getPartyId());
+            }
+            ls.add(dto);
+        }
+        return ls;
+    }
     // Get All ingredients by similar name
     public List<IngredientResponseDto> getIngredientByName(String name) {
 

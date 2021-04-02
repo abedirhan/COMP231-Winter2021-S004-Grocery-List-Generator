@@ -50,6 +50,19 @@ public class IngredientController {
         }
     }
 
+    @GetMapping("/getAllByUserId")
+    @ApiOperation(value = "Get List of Ingredients By UserId ")
+    public @ResponseBody
+    ResponseEntity<Response<List<IngredientResponseDto>>> getIngredientsByUserId( @RequestParam String userId) {
+
+        try {
+            return ResponseEntity.ok(Response.ok(ingredientService.getListOfIngredientsByUserId(  userId)));
+
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body((Response.exception(ex)));
+        }
+    }
+
     @GetMapping("/getByName")
     @ApiOperation(value = "Get Ingredients by Name ")
     public @ResponseBody
