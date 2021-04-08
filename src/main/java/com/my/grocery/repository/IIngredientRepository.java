@@ -9,6 +9,9 @@ import java.util.List;
 
 @Repository
 public interface IIngredientRepository extends JpaRepository<Ingredient, Long> {
-@Query(value = " select * from ingredient where ingredient.ingredient_name LIKE ?% ", nativeQuery = true)
-List<Ingredient> findByName(String name);
+    @Query(value = " select * from ingredient where ingredient.ingredient_name LIKE ?% ", nativeQuery = true)
+    List<Ingredient> findByName(String name);
+
+    @Query(value = " select * from ingredient where ingredient.party_id=?1 ", nativeQuery = true)
+    List<Ingredient> findByNameUserId(String userId);
 }

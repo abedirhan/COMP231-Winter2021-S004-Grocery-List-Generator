@@ -22,6 +22,8 @@ public class RecipeResponseDto {
     private String price;
     private String recipePhoto;
     private String partyId;
+    private Long roleId;
+    private String roleName;
 
     List<RecipeItemResponseDto> recipeItemList =new ArrayList<>();
 
@@ -34,6 +36,8 @@ public class RecipeResponseDto {
         setRecipePhoto(recipe.getRecipePhoto());
         setPartyId(recipe.getParty().getPartyId());
         setRecipeItemList(_recipeItemList);
+        setRoleId(recipe.getParty().getRole().getRoleId());
+        setRoleName(recipe.getParty().getRole().getName());
 
     }
 }

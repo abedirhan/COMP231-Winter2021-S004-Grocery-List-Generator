@@ -15,14 +15,18 @@ public class RecipeItemResponseDto {
     private String itemQuantity;
     private Long ingredientId;
     private Long recipeId;
-
+    private String ingredientName;
+    private String unitType;
+    private String calorie;
 
     public RecipeItemResponseDto(RecipeItem item) {
         setItemId(item.getItemId());
         setItemQuantity(item.getItemQuantity());
         setIngredientId(item.getIngredient().getIngredientId());
         setRecipeId(item.getRecipe().getRecipeId());
-
+        setIngredientName(item.getIngredient().getIngredientName());
+        setUnitType(item.getIngredient().getUnitType());
+        setCalorie(item.getIngredient().getCalorie());
     }
 
 }
